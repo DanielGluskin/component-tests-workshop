@@ -23,6 +23,7 @@ beforeEach(() => {
 describe('Sensors test', () => {
   // ✅ TASK: Write the following test 👇 to ensure adding an event succeed
   // 💡 TIP: The event schema is already defined below
+
   test('When adding a valid event, Then should get successful confirmation', async () => {
     // Arrange
     const eventToAdd = {
@@ -30,7 +31,7 @@ describe('Sensors test', () => {
       temperature: 20,
       reason: 'Thermostat-failed', // This must be unique
       color: 'Green',
-      weight: '80',
+      weight: '80', // ✋ it should be a number or it fails
       status: 'active',
     };
 
@@ -45,6 +46,7 @@ describe('Sensors test', () => {
   // ✅ TASK: Run the test above twice, it fails, ah? Let's fix!
   // 💡 TIP: The failure is because the field 'reason' is unique. When the test runs for the second time -> This value already exists
   // 💡 TIP: Write an helper function that create unique and short value, put this at the end of the reason field
+  // ✋ There is an implementatition already, why should we spend time and write it?
 
   // ✅ TASK: In the test above 👆, ensure that 'id' field is also part of the response with the right type
   // But hey, there is a challenge here: The 'id' is different in every response
@@ -55,6 +57,7 @@ describe('Sensors test', () => {
   // 💡 TIP: This test probably demands two POST calls, you can use the same JSON payload twice
   test.todo(
     'When a record exist with a specific reason and trying to add a second one, then it fails with status 409',
+    // ✋ The api is not failing with 409, instead it throws SequelizeUniqueConstraintError
   );
 
   // ✅ TASK: Let's write the test below 👇 that checks that querying by ID works. For now, temporarily please query for the event that
@@ -67,6 +70,7 @@ describe('Sensors test', () => {
   });
 
   // ✅ TASK: Run the last test 👆 alone (without running other tests). Does it pass now?
+  // ✋ It passes cause we don't clean the DB
   // 💡 TIP: To run a single test only, put the word test.only in front of the test method
   // 💡 TIP: Other way to run a single test is to run the tests in watch mode - 'npm run test:dev',
   //  then within the CLI type "t", now type your desired test name
@@ -77,6 +81,7 @@ describe('Sensors test', () => {
 
   // ✅ TASK: Let's fix the query test above 👆 - Make it pass all the time, even when running alone
   // 💡 TIP: Create the desired state within the test, don't trust any other test
+  // ✋ I think the tip 👆 is not clear enough, maybe it should explicitly say what to do
 
   // ✅ TASK: Write the following test below 👇 to check that the app is able to return all records
   // 💡 TIP: Checking the number of records in the response might be fragile as there other processes and tests
@@ -91,6 +96,7 @@ describe('Sensors test', () => {
   // Check that when adding two events at the same time, both are saved successfully
   // 💡 TIP: To check something was indeed saved, it's not enough to rely on the response - Ensure that it is retrievable
   // 💡 TIP: Promise.all function might be helpful to parallelize the requests
+  // ✋ The solution doesn't use Promise.all, wouldn't it be cleaner with it?
 
   // ✅🚀 TASK: Although we don't clean-up the DB during the tests, it's useful to clean-up in the end. Let's delete the data tables after all the tests
   // 💡 TIP: Choose the right hook thoughtfully and remember that two test files might get executed at the same time
@@ -98,4 +104,6 @@ describe('Sensors test', () => {
 
   // ✅🚀 #daniel TASK: Test that querying for /sensor-events route (i.e. get all) and sorting by the field 'category', the results are indeed sorted
   // 💡 TIP: Each test should be independent and might run alone without others, don't count on data (events) from other tests
+  // ✋ The api and task is unclear, as it filters by the category (not sorting).
+  // ✋ I think it will be better to sort according to temperature or weight (both on default by the api and here at the test description).
 });

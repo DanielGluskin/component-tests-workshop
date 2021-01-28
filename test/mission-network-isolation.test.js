@@ -25,6 +25,7 @@ afterAll(() => {});
 describe('Sensors test', () => {
   // ✅ TASK: Uncomment this test and run it. It will fail. Do you understand why?
   // 💡 TIP: When setting high temperature event, then a notification is sent with HTTP request
+  // ✋ Make sure it really fails
   test('When adding a valid event, Then should get successful confirmation', async () => {
     // Arrange
     const eventToAdd = getSensorEvent({ temperature: 60 });
@@ -41,7 +42,7 @@ describe('Sensors test', () => {
 
   // ✅ TASK: Fix the failing test above 👆 by intercepting the network call and replying with some sensible default
   // 💡 TIP: Many tests will need to avoid doing network requests, put this interception within some a test hook that affect all the tests
-  // 💡 TIP: This is the basic nock syntax: nock('http://localhost').post(/notification./default).reply(200, {success: true,});
+  // 💡 TIP: This is the basic nock syntax: nock('http://localhost').post(/notification./default).reply(200, { success: true });
 
   // ✅ TASK: Ensure to clean-up all the defined nocks after each test. Let each test start with a clean slate!
   // 💡 TIP: Sometimes tests do modify some network/services reply, further tests might fail because of these changes
@@ -55,6 +56,10 @@ describe('Sensors test', () => {
       notificationCategory: getShortUnique(),
     });
     let notificationPayload;
+    // ✋ A bit unclear... Is that what we suppose to do?
+    const scope = nock('http://localhost')
+      .post(`/notification/${eventToAdd.notificationCategory}`, () => true)
+      .reply(200, { success: true });
 
     // 💡 TIP: You need to define here a new nock, so you can listen to it and ensure that the call did happen
     // 💡 TIP: Since there is already a nock defined for this address, this new nock must has a unique address.
@@ -74,6 +79,7 @@ describe('Sensors test', () => {
   // Use this function to set a local variable in the test with the body. Then on the assertion phase, check the content of this variable
 
   // ✅ TASK: Write the following test below
+  // ✋ Here we do need the try-catch block inside the api,
   test('When emitting a new event and the notification service replies with 500 error, then the added event was still saved successfully', async () => {
     // Arrange
     const eventToAdd = getSensorEvent({
@@ -93,6 +99,9 @@ describe('Sensors test', () => {
 // ✅🚀 There is some naughty code that is issuing HTTP requests without our awareness! Find it and nock it!
 // 💡 TIP: When approaching real HTTP requests during testing, this might incur costs, performance issues and mostly flakiness
 // 💡 TIP: Nock allows you to prevent this using the command nock.enableNetConnect(). Just make sure to allow 127.0.0.1 calls since this is the internal API
+// ✋ Did you mean to write "disableNetConnect"?
+// 💣 IMPORTANT: disabling connection will make validationService fail.
+// 💣 ALSO IMPORTANT: mention to enableNetConnect at afterAll
 
 // ✅🚀 #daniel TASK: Write the same test like above 👆, but this time when the response arrives with some delay
 // 💡 TIP: Some code contains races between multiple tasks (e.g. Promise.race), for example when waiting for the request for sometime
